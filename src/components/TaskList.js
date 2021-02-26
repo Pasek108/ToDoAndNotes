@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Icon, Grid, Segment, Checkbox, Divider, Accordion } from 'semantic-ui-react';
 import { getTasks } from '../services/UserService';
 
@@ -57,7 +57,7 @@ class Task extends React.Component {
                     if (!isNaN(elem.id)) {
                         return (
                             <div key={elem.length} className="subtask">
-                                <strong><Checkbox label={elem.name} checked={elem.checked}></Checkbox></strong>
+                                <strong><Checkbox label={elem.name} defaultChecked={elem.checked}></Checkbox></strong>
                                 <div className="subtask-description">
                                     {elem.description}
                                 </div>
@@ -72,6 +72,160 @@ class Task extends React.Component {
             </Segment>
         );
     }
+}
+
+function Today(props) {
+    let show = [<div className="text-center mt-40vh"><h3>Brak zadań</h3></div>];
+    let filteredTasks = [];
+
+    const nowTimestamp = new Date();
+    const now = {
+        day: nowTimestamp.getDate(),
+        month: nowTimestamp.getMonth() + 1,
+        year: nowTimestamp.getFullYear()
+    };
+
+    for (let i = 0; i < props.tasks.length; i++) {
+        const task = props.tasks[i];
+        const subTasks = task.sub_tasks;
+
+        const taskTermTimestamp = new Date(task.date_of_execute);
+        const taskTerm = {
+            day: taskTermTimestamp.getDate(),
+            month: taskTermTimestamp.getMonth() + 1,
+            year: taskTermTimestamp.getFullYear()
+        };
+
+        if (!task.archive) {
+            if (taskTerm.day === now.day && taskTerm.month === now.month && taskTerm.year === now.year) {
+                filteredTasks.push(<Task key={i} task={task} />);
+            }
+            else if (subTasks !== undefined) {
+                for (let j = 0; j < subTasks.length; j++) {
+                    const subTaskTermTimestamp = new Date(subTasks[j].date_of_execute);
+                    const subTaskTerm = {
+                        day: subTaskTermTimestamp.getDate(),
+                        month: subTaskTermTimestamp.getMonth() + 1,
+                        year: subTaskTermTimestamp.getFullYear()
+                    };
+
+                    if (subTaskTerm.day === now.day && subTaskTerm.month === now.month && subTaskTerm.year === now.year) {
+                        filteredTasks.push(<Task key={i} task={task} />);
+                    }
+                }
+            }
+        }
+    }
+
+    if (filteredTasks.length > 0) show[0] = <Divider horizontal className="mt-0">Dzisiaj</Divider>;
+
+    show.push(filteredTasks);
+
+    return show;
+}
+
+function Next7Days(props) {
+    const [activeIndex, setActive] = useState(-1);
+
+    let show = [<div className="text-center mt-40vh"><h3>Brak zadań</h3></div>];
+    let accordions = [];
+
+    const nowTimestamp = new Date();
+
+    for (let i = 0; i < 7; i++) {
+        const nextDayTimestamp = new Date(nowTimestamp.setDate(nowTimestamp.getDate() + 1));
+
+        let date = {
+            day: nextDayTimestamp.getDate().toString().padStart(2, "0"),
+            month: (nextDayTimestamp.getMonth() + 1).toString().padStart(2, "0"),
+            year: nextDayTimestamp.getFullYear()
+        }
+
+        if (i === 0) accordions.push(
+            <Accordion.Title className="mb-1-5 mt-05" active={activeIndex === i} index={i} onClick={() => {
+                (activeIndex === i) ? setActive(-1) : setActive(i)
+            }}>
+                <Icon name='dropdown' className="float-left" />
+                <Divider horizontal className="mt-0 mb-0 float-left" style={{ width: "97.5%" }}>Jutro</Divider>
+            </Accordion.Title>
+        );
+        else if (i === 1) accordions.push(
+            <Accordion.Title className="mb-1-5 mt-05" active={activeIndex === i} index={i} onClick={() => {
+                (activeIndex === i) ? setActive(-1) : setActive(i)
+            }}>
+                <Icon name='dropdown' className="float-left" />
+                <Divider horizontal className="mt-0 mb-0 float-left" style={{ width: "97.5%" }}>Pojutrze</Divider>
+            </Accordion.Title>
+        );
+        else accordions.push(
+            <Accordion.Title className="mb-1-5 mt-05" active={activeIndex === i} index={i} onClick={() => {
+                (activeIndex === i) ? setActive(-1) : setActive(i)
+            }}>
+                <Icon name='dropdown' className="float-left" />
+                <Divider horizontal className="mt-0 mb-0 float-left" style={{ width: "97.5%" }}>
+                    {`${date.day}-${date.month}-${date.year}`}
+                </Divider>
+            </Accordion.Title>
+        );
+
+        let filteredTasks = [];
+
+        for (let j = 0; j < props.tasks.length; j++) {
+            const task = props.tasks[j];
+            const subTasks = task.sub_tasks;
+
+            const taskTermTimestamp = new Date(task.date_of_execute);
+            const taskTerm = {
+                day: taskTermTimestamp.getDate().toString().padStart(2, "0"),
+                month: (taskTermTimestamp.getMonth() + 1).toString().padStart(2, "0"),
+                year: taskTermTimestamp.getFullYear()
+            };
+
+            if (!task.archive) {
+                if (taskTerm.day === date.day && taskTerm.month === date.month && taskTerm.year === date.year) {
+                    filteredTasks.push(<Task key={j} task={task} />);
+                }
+                else if (subTasks !== undefined) {
+                    for (let k = 0; k < subTasks.length; k++) {
+                        const subTaskTermTimestamp = new Date(subTasks[k].date_of_execute);
+                        const subTaskTerm = {
+                            day: subTaskTermTimestamp.getDate().toString().padStart(2, "0"),
+                            month: (subTaskTermTimestamp.getMonth() + 1).toString().padStart(2, "0"),
+                            year: subTaskTermTimestamp.getFullYear()
+                        };
+
+                        if (subTaskTerm.day === date.day && subTaskTerm.month === date.month && subTaskTerm.year === date.year) {
+                            filteredTasks.push(<Task key={j} task={task} />);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (filteredTasks.length === 0) filteredTasks.push(
+            <div style={{ marginLeft: "2%" }} className="text-center">
+                <h5>Brak zadań</h5>
+            </div>
+        )
+
+        accordions.push(
+            <Accordion.Content active={activeIndex === i}>
+                {filteredTasks}
+            </Accordion.Content>
+        );
+    }
+
+    if (accordions.length > 0) show[0] = "";
+
+    show.push(accordions);
+
+    return <Accordion>{show}</Accordion>;
+}
+
+function Important(props) {
+    return props.tasks.map((elem, index) => {
+        if (elem.important) return <Task key={index} task={elem} />
+    })
 }
 
 export default class TaskList extends React.Component {
@@ -115,113 +269,11 @@ export default class TaskList extends React.Component {
 
     render() {
         const active = this.props.active;
-        let show = [<div className="text-center mt-40vh"><h3>Brak zadań</h3></div>];
+        let show = [];
 
-        if (active === 0) {
-            let filteredTasks = [];
-
-            for (let i = 0; i < this.state.tasks.length; i++) {
-                const task = this.state.tasks[i];
-                const subTasks = task.sub_tasks;
-
-                const taskTermTimestamp = new Date(task.date_of_execute);
-                const taskTerm = {
-                    day: taskTermTimestamp.getDate(),
-                    month: taskTermTimestamp.getMonth() + 1,
-                    year: taskTermTimestamp.getFullYear()
-                };
-
-                const nowTimestamp = new Date();
-                const now = {
-                    day: nowTimestamp.getDate(),
-                    month: nowTimestamp.getMonth() + 1,
-                    year: nowTimestamp.getFullYear()
-                };
-
-                if (!task.archive) {
-                    if (taskTerm.day === now.day && taskTerm.month === now.month && taskTerm.year === now.year) {
-                        filteredTasks.push(<Task key={i} task={task} />);
-                    }
-                    else if (subTasks !== undefined) {
-                        for (let j = 0; j < subTasks.length; j++) {
-                            const subTaskTermTimestamp = new Date(subTasks[j].date_of_execute);
-                            const subTaskTerm = {
-                                day: subTaskTermTimestamp.getDate(),
-                                month: subTaskTermTimestamp.getMonth() + 1,
-                                year: subTaskTermTimestamp.getFullYear()
-                            };
-
-                            if (subTaskTerm.day === now.day && subTaskTerm.month === now.month && subTaskTerm.year === now.year) {
-                                filteredTasks.push(<Task key={i} task={task} />);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (filteredTasks.length > 0) show[0] = <Divider horizontal className="mt-0">Dzisiaj</Divider>;
-        }
-        else if (active === 1) {
-            let filteredTasks = [];
-
-            for (let i = 0; i < this.state.tasks.length; i++) {
-                const task = this.state.tasks[i];
-                const subTasks = task.sub_tasks;
-
-                const taskTermTimestamp = new Date(task.date_of_execute);
-                const taskTerm = {
-                    day: taskTermTimestamp.getDate(),
-                    month: taskTermTimestamp.getMonth() + 1,
-                    year: taskTermTimestamp.getFullYear()
-                };
-
-                const nowTimestamp = new Date();
-                const now = {
-                    day: nowTimestamp.getDate(),
-                    month: nowTimestamp.getMonth() + 1,
-                    year: nowTimestamp.getFullYear()
-                };
-
-                if (!task.archive) {
-                    if (taskTerm.day > now.day && taskTerm.day < now.day + 8) {
-                        if(taskTerm.month === now.month && taskTerm.year === now.year) {
-                            filteredTasks.push(<Task key={i} task={task} />);
-                        }
-                    }
-                    else if(taskTerm.day < now.day) {
-                        
-
-                    }
-                    
-                    else if (subTasks !== undefined) {
-                        for (let j = 0; j < subTasks.length; j++) {
-                            const subTaskTermTimestamp = new Date(subTasks[j].date_of_execute);
-                            const subTaskTerm = {
-                                day: subTaskTermTimestamp.getDate(),
-                                month: subTaskTermTimestamp.getMonth() + 1,
-                                year: subTaskTermTimestamp.getFullYear()
-                            };
-
-                            if (subTaskTerm.day === now.day && subTaskTerm.month === now.month && subTaskTerm.year === now.year) {
-                                filteredTasks.push(<Task key={i} task={task} />);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (filteredTasks.length > 0) show[0] = "";
-        }
-        else if (active === 2) {
-            show[0] = "";
-            show.push(
-                <div>
-                    {this.state.tasks.map((elem, index) => {
-                        if (elem.important) return <Task key={index} task={elem} />
-                    })}
-                </div>
-            )
-        }
+        if (active === 0) show.push(<Today tasks={this.state.tasks} />);
+        else if (active === 1) show.push(<Next7Days tasks={this.state.tasks} />);
+        else if (active === 2) show.push(<Important tasks={this.state.tasks} />)
         else if (active === 3) {
             show[0] = "";
             show.push(

@@ -59,7 +59,7 @@ export function getTasks() {
                 title: "Powtarzalne zadanie z terminem",
                 description: "",
                 creation_date: 16141928725554,
-                date_of_execute: 1614194872555,
+                date_of_execute: 1614301186596,
                 list_id: 4,
                 important: 0,
                 repeat: 1,
@@ -107,7 +107,7 @@ export function getTasks() {
                         id: 1,
                         title: "Zadanie podzrędne 1",
                         description: "",
-                        date_of_execute: 0,
+                        date_of_execute: 1614611186596,
                         checked: 0
                     }
                 ]
