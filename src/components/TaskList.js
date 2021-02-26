@@ -213,6 +213,7 @@ export default class TaskList extends React.Component {
             if (filteredTasks.length > 0) show[0] = "";
         }
         else if (active === 2) {
+            show[0] = "";
             show.push(
                 <div>
                     {this.state.tasks.map((elem, index) => {
@@ -222,6 +223,7 @@ export default class TaskList extends React.Component {
             )
         }
         else if (active === 3) {
+            show[0] = "";
             show.push(
                 <div>
                     <Divider horizontal className="mt-0">Dzisiaj</Divider>
@@ -229,6 +231,7 @@ export default class TaskList extends React.Component {
             )
         }
         else if (active > 3 && active < 12) {
+            show[0] = "";
             show.push(
                 <div>
                     <Grid columns={3} divided>
@@ -268,6 +271,7 @@ export default class TaskList extends React.Component {
             );
         }
         else if (active === 12) {
+            show[0] = "";
             show.push(
                 <div>
                     <Divider horizontal className="mt-0">Dzisiaj</Divider>
