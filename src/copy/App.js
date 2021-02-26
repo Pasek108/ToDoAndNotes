@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import 'semantic-ui-css/semantic.min.css'
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Input } from 'semantic-ui-react';
 import ToDo from './components/ToDo'
 import Notes from './components/Notes';
 
@@ -40,8 +40,11 @@ class PageHeader extends React.Component {
             onClick={this.handleItemClick}
           />
           <Menu.Menu position="right">
-            <Menu.Item active={activeItem === 'Preferencje'} name="Preferencje" onClick={this.handleItemClick}>
-              <Icon name="wrench" /> Preferencje
+            <Menu.Item>
+              <Input
+                icon={{ name: "search", link: true }}
+                placeholder="Szukaj"
+              />
             </Menu.Item>
           </Menu.Menu>
         </Menu>
@@ -72,7 +75,6 @@ class App extends React.Component {
       <div>
         <PageHeader onClick={this.handleItemClick} />
         {openPage}
-        <div className="footer">2021 © Artur Pas</div>
       </div>
     );
   }
