@@ -15,6 +15,7 @@ export default function Important(props) {
     const parameters = { day: true, month: true, year: true };
 
     let dates = [];
+    let stringDates = [];
 
     for (let i = 0; i < props.tasks.length; i++) {
         const task = props.tasks[i];
@@ -25,7 +26,17 @@ export default function Important(props) {
         const active = activeIndex === i;
         const closeOrOpen = () => { (active) ? setActive(-1) : setActive(i) };
 
+        let skip = false;
         if (task.date_of_execute !== 0) {
+            for (let j = 0; j < stringDates.length; j++) {
+                if (stringDates[j] === `${date.day}-${date.month}-${date.year}`) {
+                    skip = true;
+                    break;
+                }
+            }
+            if (skip) continue;
+            stringDates.push(`${date.day}-${date.month}-${date.year}`);
+
             accordions.push(
                 <AccordionDivider key={i} active={active} index={i} text={`${date.day}-${date.month}-${date.year}`} onClick={closeOrOpen} />
             );
@@ -35,6 +46,15 @@ export default function Important(props) {
             for (let k = 0; k < subTasks.length; k++) {
                 const subTaskTerm = calculateDateAndTime(subTasks[k].date_of_execute, parameters);
                 date = subTaskTerm;
+
+                for (let j = 0; j < stringDates.length; j++) {
+                    if (stringDates[j] === `${date.day}-${date.month}-${date.year}`) {
+                        skip = true;
+                        break;
+                    }
+                }
+                if (skip) continue;
+                stringDates.push(`${date.day}-${date.month}-${date.year}`);
 
                 if (subTasks[k].date_of_execute !== 0) {
                     accordions.push(
