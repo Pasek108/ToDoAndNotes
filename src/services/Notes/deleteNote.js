@@ -1,4 +1,4 @@
-import { getLocalStorageCounter, getLocalStorageItem, setNote, isLocalStorageItemSet, getCategory } from './helperFunctions';
+import { getLocalStorageCounter, getLocalStorageItem, setNote, isLocalStorageItemSet, getCategory } from '../helperFunctions';
 
 export default function deleteNote(id) {
     let categories = [];

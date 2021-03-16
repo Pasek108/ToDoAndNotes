@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, Icon, Item, Accordion } from 'semantic-ui-react';
 
+import HelpAndContact from '../HelpAndContact';
+
 function Category(props) {
   const currentlyOpen = (props.index === props.i);
   const bigCircleStyles = {
@@ -85,12 +87,12 @@ export default class Categories extends React.Component {
         <Item>
           <Button className="mx-auto mt-1" color="green" onClick={this.handleAddButtonClick}>
             <Icon style={{ opacity: "1" }} name="plus" /> Dodaj notatke
-          </Button>
+            </Button>
         </Item>
 
         <h4 className="mt-1">
           Kategorie
-          <Icon
+            <Icon
             title="Edutuj kategorie"
             color="grey" size="large" name="setting"
             onClick={this.handleEditCategoriesClick}
@@ -98,11 +100,14 @@ export default class Categories extends React.Component {
           />
         </h4>
 
-        <Item>
+        <Item style={{ paddingBottom: ".5rem" }}>
           <Accordion fluid styled>
             {this.state.categories}
           </Accordion>
         </Item>
+        <div className="mb-6" />
+
+        <HelpAndContact onClick={this.props.onClick} />
       </div>
     );
   }

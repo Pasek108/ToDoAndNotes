@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon, Item, Segment, Grid, Modal, Button, Popup, Checkbox } from 'semantic-ui-react';
 
-import formatBBCodeText from '../services/Notes/formatBBCode';
+import formatBBCodeText from '../../services/Notes/formatBBCode';
 
 export default class NotesListElement extends React.Component {
     constructor(props) {

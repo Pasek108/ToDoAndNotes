@@ -1,4 +1,4 @@
-import { getLocalStorageCounter, getLocalStorageItem, setNote } from './helperFunctions';
+import { getLocalStorageCounter, getLocalStorageItem, setNote } from '../helperFunctions';
 
 export default function saveNote(data) {
     const notesCount = getLocalStorageCounter("countNotes");

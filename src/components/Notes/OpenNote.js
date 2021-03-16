@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon, Button, TextArea } from 'semantic-ui-react';
-import formatBBCodeText from '../services/Notes/formatBBCode';
+import formatBBCodeText from '../../services/Notes/formatBBCode';
 
 export default class OpenNote extends React.Component {
     constructor(props) {

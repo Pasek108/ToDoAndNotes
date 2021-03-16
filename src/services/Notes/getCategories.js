@@ -1,4 +1,4 @@
-import { isLocalStorageItemSet, getLocalStorageCounter, getCategory } from './helperFunctions';
+import { isLocalStorageItemSet, getLocalStorageCounter, getCategory } from '../helperFunctions';
 
 const premadeCategories = [
     { id: 1, name: "Wszystkie", color: "#FBBD08" },

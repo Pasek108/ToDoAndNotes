@@ -1,4 +1,4 @@
-import { getLocalStorageCounter, getCategory, getLocalStorageItem, setNote } from './helperFunctions';
+import { getLocalStorageCounter, getCategory, getLocalStorageItem, setNote } from '../helperFunctions';
 
 function saveAndRemoveCategories() {
     let oldCategories = [];

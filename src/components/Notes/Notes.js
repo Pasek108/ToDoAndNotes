@@ -1,12 +1,13 @@
 import React from 'react';
-import { Icon, Item, Segment, TransitionablePortal, Transition, ItemGroup } from 'semantic-ui-react';
+import { Icon, Item, Segment, TransitionablePortal, Transition, ItemGroup, Container, Grid } from 'semantic-ui-react';
 
-import getCategories from '../services/Notes/getCategories';
-import updateNoteCategories from '../services/Notes/updateNoteCategories';
-import getNotes from '../services/Notes/getNotes';
-import saveNote from '../services/Notes/saveNote';
-import deleteNote from '../services/Notes/deleteNote';
-import backupNote from '../services/Notes/backupNote';
+import getCategories from '../../services/Notes/getCategories';
+import updateNoteCategories from '../../services/Notes/updateNoteCategories';
+import getNotes from '../../services/Notes/getNotes';
+import saveNote from '../../services/Notes/saveNote';
+import deleteNote from '../../services/Notes/deleteNote';
+import backupNote from '../../services/Notes/backupNote';
+import { calculateDateAndTime } from '../../services/helperFunctions';
 
 import Categories from './Categories';
 import CategoriesEdit from './CategoriesEdit';
@@ -62,6 +63,7 @@ export default class Notes extends React.Component {
       this.setState({ categories: getCategories() }, () => {
         this.setState({
           categoriesList: <Categories
+            onClick={this.props.onClick}
             categories={this.state.categories}
             handleCategoryChange={this.handleCategoryChange}
             handleButtonClick={this.handleButtonClick}
@@ -107,15 +109,8 @@ export default class Notes extends React.Component {
       note: "Napisz coś",
       timestamp: new Date().getTime()
     }
-    const dateTimestamp = new Date(newNote.timestamp);
-    const dateAndTime = {
-      seconds: dateTimestamp.getSeconds().toString().padStart(2, "0"),
-      minutes: dateTimestamp.getMinutes().toString().padStart(2, "0"),
-      hours: dateTimestamp.getHours().toString().padStart(2, "0"),
-      day: dateTimestamp.getDate().toString().padStart(2, "0"),
-      month: (dateTimestamp.getMonth() + 1).toString().padStart(2, "0"),
-      year: dateTimestamp.getFullYear().toString().padStart(2, "0")
-    }
+    const parameters = { day: true, month: true, year: true, hours: true, minutes: true, seconds: true };
+    const dateAndTime = calculateDateAndTime(newNote.timestamp, parameters);
     newNote.date = `${dateAndTime.day}-${dateAndTime.month}-${dateAndTime.year}`;
     newNote.time = `${dateAndTime.hours}:${dateAndTime.minutes}:${dateAndTime.seconds}`;
 
@@ -163,17 +158,22 @@ export default class Notes extends React.Component {
   render() {
 
     return (
-      <div className="ui stackable two column divided grid container" style={{ minHeight: "90vh", paddingBottom: "1rem" }}>
-        <div className="three wide column">
-          {this.state.categoriesList}
-        </div>
-        <div className="thirteen wide column h-min-85vh">
-          <Transition.Group as={ItemGroup} duration={{ hide: 0, show: 250 }}>
-            {this.state.showNotesElement.map((item, index) => (
-              <Item key={index}>{item}</Item>
-            ))}
-          </Transition.Group>
-        </div>
+      <Container>
+        <Grid columns={2} divided style={{ minHeight: "calc(100vh - 5.2rem)", paddingBottom: "1rem" }}>
+          <Grid.Row className="p-0">
+            <Grid.Column width={3} className="p-1">
+              {this.state.categoriesList}
+            </Grid.Column>
+
+            <Grid.Column width={13} className="p-1">
+              <Transition.Group as={ItemGroup} duration={{ hide: 0, show: 250 }}>
+                {this.state.showNotesElement.map((item, index) => (
+                  <Item key={index}>{item}</Item>
+                ))}
+              </Transition.Group>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
 
         <TransitionablePortal open={this.state.saved} transition={{ animation: "fade up", duration: 500 }} >
           <Segment className="saved-popup">
@@ -182,7 +182,7 @@ export default class Notes extends React.Component {
             </h3>
           </Segment>
         </TransitionablePortal>
-      </div>
+      </Container>
     );
   }
 }

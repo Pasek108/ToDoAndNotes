@@ -1,4 +1,11 @@
-import { isLocalStorageItemSet, getLocalStorageCounter, getCategory, getLocalStorageItem } from './helperFunctions';
+import {
+    calculateDateAndTime,
+    isLocalStorageItemSet,
+    getLocalStorageCounter,
+    getCategory,
+    getLocalStorageItem
+} from '../helperFunctions';
+
 
 export default function getNotes() {
     if (!isLocalStorageItemSet("countNotes")) localStorage.setItem("countNotes", "0");
@@ -32,15 +39,8 @@ export default function getNotes() {
             }
         )
 
-        const dateTimestamp = new Date(notes[i - 1].timestamp);
-        const dateAndTime = {
-            seconds: dateTimestamp.getSeconds().toString().padStart(2, "0"),
-            minutes: dateTimestamp.getMinutes().toString().padStart(2, "0"),
-            hours: dateTimestamp.getHours().toString().padStart(2, "0"),
-            day: dateTimestamp.getDate().toString().padStart(2, "0"),
-            month: (dateTimestamp.getMonth() + 1).toString().padStart(2, "0"),
-            year: dateTimestamp.getFullYear().toString().padStart(2, "0")
-        }
+        const parameters = { day: true, month: true, year: true, hours: true, minutes: true, seconds: true };
+        const dateAndTime = calculateDateAndTime(notes[i - 1].timestamp, parameters);
         notes[i - 1].date = `${dateAndTime.day}-${dateAndTime.month}-${dateAndTime.year}`;
         notes[i - 1].time = `${dateAndTime.hours}:${dateAndTime.minutes}:${dateAndTime.seconds}`;
 

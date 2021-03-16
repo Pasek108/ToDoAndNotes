@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Icon, Item, Accordion, Transition, ItemGroup } from 'semantic-ui-react';
 
-import sendCategories from '../services/Notes/sendCategories';
+import sendCategories from '../../services/Notes/sendCategories';
 
 import CategoriesListElement from './CategoriesListElement';
 
@@ -10,10 +10,13 @@ export default class CategoriesEdit extends React.Component {
         super(props);
         this.state = {
             categoriesList: [],
+            keys: [],
             newCategoriesList: [],
             colors: [],
             countCategories: 0
         }
+
+        this.keyCount = 0;
 
         this.handleChangeComplete = this.handleChangeComplete.bind(this);
         this.updateCategories = this.updateCategories.bind(this);
@@ -33,11 +36,16 @@ export default class CategoriesEdit extends React.Component {
 
     createCategoriesList() {
         let categoriesList = [];
+        let keys = this.state.keys;
 
         for (let i = 1; i < this.props.categories.length - 1; i++) {
+            if (this.state.keys.length === 0) {
+                const key = this.keyCount++;
+                keys.push(key);
+            }
             categoriesList.push(
                 <CategoriesListElement
-                    key={this.props.categories[i].name + i}
+                    key={keys[i - 1]}
                     handleChangeComplete={this.handleChangeComplete}
                     name={this.props.categories[i].name}
                     color={this.state.colors[i]} i={i}
@@ -47,7 +55,7 @@ export default class CategoriesEdit extends React.Component {
             );
         }
 
-        this.setState({ newCategoriesList: categoriesList });
+        this.setState({ newCategoriesList: categoriesList, keys: keys });
     }
 
     handleChangeComplete(i, color) {
@@ -79,17 +87,20 @@ export default class CategoriesEdit extends React.Component {
         this.setState({ colors: colors }, () => {
             let categoriesList = this.props.categories;
             categoriesList.splice(categoriesList.length - 1, 0, {
-                name: "Nowa kategoria",
+                name: "(Kliknij aby zmienić nazwe)",
                 color: "#FBBD08"
             });
             this.setState({ categoriesList: categoriesList }, () => {
                 this.setState((state) => ({ countCategories: state.countCategories + 1 }));
                 const i = this.props.categories.length - 2;
                 let newCategoriesList = this.state.newCategoriesList;
+                let keys = this.state.keys;
 
+                const key = this.keyCount++;
+                keys.push(key);
                 newCategoriesList.push(
                     <CategoriesListElement
-                        key={this.props.categories[i].name + i}
+                        key={key}
                         handleChangeComplete={this.handleChangeComplete}
                         name={this.props.categories[i].name}
                         color={this.state.colors[i]} i={i}
@@ -98,7 +109,7 @@ export default class CategoriesEdit extends React.Component {
                     />
                 );
 
-                this.setState({ newCategoriesList: newCategoriesList });
+                this.setState({ newCategoriesList: newCategoriesList, keys: keys });
             });
         });
     }
@@ -106,7 +117,9 @@ export default class CategoriesEdit extends React.Component {
     deleteCategory(i) {
         let colors = this.state.colors;
         colors.splice(i, 1);
-        this.setState({ colors: colors }, () => {
+        let keys = this.state.keys;
+        keys.splice(i, 1);
+        this.setState({ colors: colors, keys: keys }, () => {
             let categoriesList = this.props.categories;
             categoriesList.splice(i, 1);
             this.setState({ categoriesList: categoriesList }, () => {
@@ -120,7 +133,10 @@ export default class CategoriesEdit extends React.Component {
         let categoriesList = this.props.categories;
         let colors = this.state.colors;
         for (let j = 0; j < categoriesList.length; j++) {
-            categoriesList[j].name = categoriesList[j].name.trim().slice(0, 20);
+            let name = categoriesList[j].name.trim();
+            if (name === "(Kliknij aby zmienić nazwe)") name = "Nowa kategoria";
+
+            categoriesList[j].name = name.slice(0, 20);
             categoriesList[j].color = colors[j];
         }
 
