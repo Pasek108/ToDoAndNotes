@@ -6,7 +6,7 @@ import updateNoteCategories from '../../services/Notes/updateNoteCategories';
 import getNotes from '../../services/Notes/getNotes';
 import saveNote from '../../services/Notes/saveNote';
 import deleteNote from '../../services/Notes/deleteNote';
-import backupNote from '../../services/Notes/backupNote';
+import restoreNote from '../../services/Notes/restoreNote';
 import { calculateDateAndTime } from '../../services/helperFunctions';
 
 import Categories from './Categories';
@@ -34,7 +34,7 @@ export default class Notes extends React.Component {
     this.showNote = this.showNote.bind(this);
     this.saveNote = this.saveNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
-    this.backupNote = this.backupNote.bind(this);
+    this.restoreNote = this.restoreNote.bind(this);
     this.updateNoteCategories = this.updateNoteCategories.bind(this);
     this.editCategories = this.editCategories.bind(this);
     this.handleCategoriesUpdate = this.handleCategoriesUpdate.bind(this);
@@ -49,7 +49,7 @@ export default class Notes extends React.Component {
   getNotes(category) {
     this.setState({
       noteToEdit: undefined,
-      showNotesElement: [<div key={"temp"}>Ładowanie...</div>],
+      showNotesElement: [<div key={"temp"}>{this.props.lang.loading}...</div>],
       openedTab: undefined
     }, () => {
       this.setState({ notes: getNotes() }, () => this.handleCategoryChange(category));
@@ -58,7 +58,7 @@ export default class Notes extends React.Component {
 
   getCategories(callback) {
     this.setState({
-      categoriesList: [<div key={"temp"}>Ładowanie...</div>]
+      categoriesList: [<div key={"temp"}>{this.props.lang.loading}...</div>]
     }, () => {
       this.setState({ categories: getCategories() }, () => {
         this.setState({
@@ -68,6 +68,7 @@ export default class Notes extends React.Component {
             handleCategoryChange={this.handleCategoryChange}
             handleButtonClick={this.handleButtonClick}
             editCategories={this.editCategories}
+            lang={this.props.lang.categories}
             update={this.state.update} />
         }, () => { if (callback !== undefined) callback("Wszystkie") })
       });
@@ -84,17 +85,18 @@ export default class Notes extends React.Component {
             key={"" + stateNotes.id + i} id={i}
             note={stateNotes[i]}
             categories={this.state.categories}
-            backupNote={this.backupNote}
+            restoreNote={this.restoreNote}
             updateNoteCategories={this.updateNoteCategories}
             showNote={this.showNote}
             deleteNote={this.deleteNote}
+            lang={this.props.lang.note}
           />
         )
       }
     }
 
     this.setState({
-      showNotesElement: (notesInCategory.length === 0) ? [<NoNotesHere />] : notesInCategory,
+      showNotesElement: (notesInCategory.length === 0) ? [<NoNotesHere lang={this.props.lang.no_notes} />] : notesInCategory,
       openedTab: category
     });
 
@@ -103,10 +105,10 @@ export default class Notes extends React.Component {
   handleButtonClick() {
     const newNote = {
       id: this.state.notes.length + 1,
-      title: "Nowa notatka",
-      category: "Nowa notatka",
+      title: this.props.lang.new_note,
+      category: this.props.lang.new_note,
       align: "left",
-      note: "Napisz coś",
+      note: this.props.lang.write_something,
       timestamp: new Date().getTime()
     }
     const parameters = { day: true, month: true, year: true, hours: true, minutes: true, seconds: true };
@@ -114,9 +116,9 @@ export default class Notes extends React.Component {
     newNote.date = `${dateAndTime.day}-${dateAndTime.month}-${dateAndTime.year}`;
     newNote.time = `${dateAndTime.hours}:${dateAndTime.minutes}:${dateAndTime.seconds}`;
 
-    this.setState({ showNotesElement: [<div>Ładowanie...</div>] }, () => {
+    this.setState({ showNotesElement: [<div>{this.props.lang.loading}...</div>] }, () => {
       this.setState({
-        showNotesElement: [<OpenNote saveNote={this.saveNote} id={newNote.id} note={newNote} />]
+        showNotesElement: [<OpenNote saveNote={this.saveNote} id={newNote.id} note={newNote} lang={this.props.lang.edit_note} />]
       })
     })
   }
@@ -131,13 +133,17 @@ export default class Notes extends React.Component {
     this.getNotes(this.state.openedTab)
   }
 
-  backupNote(id) {
-    backupNote(id);
+  restoreNote(id) {
+    restoreNote(id);
     this.getNotes(this.state.openedTab)
   }
 
   editCategories() {
-    this.setState({ showNotesElement: [<CategoriesEdit categories={this.state.categories} update={this.handleCategoriesUpdate} />] });
+    this.setState({
+      showNotesElement: [
+        <CategoriesEdit categories={this.state.categories} lang={this.props.lang.categories_edit} update={this.handleCategoriesUpdate} />
+      ]
+    });
   }
 
   handleCategoriesUpdate() {
@@ -147,7 +153,11 @@ export default class Notes extends React.Component {
   }
 
   showNote(id) {
-    this.setState({ showNotesElement: [<OpenNote saveNote={this.saveNote} id={id} note={this.state.notes[id]} />] });
+    this.setState({
+      showNotesElement: [
+        <OpenNote saveNote={this.saveNote} id={id} note={this.state.notes[id]} lang={this.props.lang.edit_note} restoreNote={this.restoreNote} />
+      ]
+    });
   }
 
   saveNote(note) {

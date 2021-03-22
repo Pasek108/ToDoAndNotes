@@ -9,7 +9,7 @@ import { calculateDateAndTime, isDateEqual, sortTasks } from '../../services/hel
 export default function Next7Days(props) {
     const [activeIndex, setActive] = useState(-1);
 
-    let show = [<div key="empty" className="text-center mt-40vh"><h3>Brak zadań</h3></div>];
+    let show = [<div key="empty" className="text-center mt-40vh"><h3>{props.lang.no_tasks}</h3></div>];
     let accordions = [];
 
     const nowTimestamp = new Date();
@@ -22,10 +22,10 @@ export default function Next7Days(props) {
         const closeOrOpen = () => { (active) ? setActive(-1) : setActive(i) };
 
         if (i === 0) accordions.push(
-            <AccordionDivider key={i} active={active} index={i} text="Jutro" onClick={closeOrOpen} />
+            <AccordionDivider key={i} active={active} index={i} text={props.lang.tomorrow} onClick={closeOrOpen} />
         );
         else if (i === 1) accordions.push(
-            <AccordionDivider key={i} active={active} index={i} text="Pojutrze" onClick={closeOrOpen} />
+            <AccordionDivider key={i} active={active} index={i} text={props.lang.day_after_tomorrow} onClick={closeOrOpen} />
         );
         else accordions.push(
             <AccordionDivider key={i} active={active} index={i} text={`${date.day}-${date.month}-${date.year}`} onClick={closeOrOpen} />
@@ -42,7 +42,7 @@ export default function Next7Days(props) {
 
             if (!task.archive) {
                 if (isDateEqual(taskTerm, date)) {
-                    filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} />);
+                    filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} lang={props.lang.task} />);
                     taskDates.push({
                         date: task.date_of_execute,
                         important: task.important
@@ -52,7 +52,7 @@ export default function Next7Days(props) {
                     for (let k = 0; k < subTasks.length; k++) {
                         const subTaskTerm = calculateDateAndTime(subTasks[k].date_of_execute, parameters);
                         if (isDateEqual(subTaskTerm, date)) {
-                            filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} />);
+                            filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} lang={props.lang.task} />);
                             taskDates.push({
                                 date: subTasks[k].date_of_execute,
                                 important: task.important

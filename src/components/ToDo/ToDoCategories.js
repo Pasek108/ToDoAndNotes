@@ -5,7 +5,7 @@ import MenuItem from './MenuItem';
 import AddListsModal from './AddListModal';
 
 import getToDoLists from '../../services/To-Do/getToDoLists';
-import addUserLists  from '../../services/To-Do/addUserLists';
+import addUserLists from '../../services/To-Do/addUserLists';
 
 export default class ToDoCategories extends React.Component {
     constructor(props) {
@@ -16,7 +16,8 @@ export default class ToDoCategories extends React.Component {
             newListColor: "#000000",
             userListsCount: -1,
             addListOpen: false,
-            update: false
+            update: false,
+            today: props.lang.today
         }
 
         this.addLists = this.addLists.bind(this);
@@ -24,11 +25,11 @@ export default class ToDoCategories extends React.Component {
 
     componentDidMount() {
         const menuItems = [
-            { icon: "calendar outline", color: "#21BA45", name: "Dzisiaj" },
-            { icon: "calendar alternate outline", color: "#6435C9", name: "Następne 7 dni" },
-            { icon: "warning", color: "#DB2828", name: "Ważne" },
-            { icon: "alarm", color: "#1B1C1D", name: "Zaległe" },
-            { icon: "archive", color: "#767676", name: "Archiwum" }
+            { icon: "calendar outline", color: "#21BA45", name: this.props.lang.today },
+            { icon: "calendar alternate outline", color: "#6435C9", name: this.props.lang.next_7_days },
+            { icon: "warning", color: "#DB2828", name: this.props.lang.important },
+            { icon: "alarm", color: "#1B1C1D", name: this.props.lang.overdue },
+            { icon: "archive", color: "#767676", name: this.props.lang.archive }
         ];
 
         const userMenuItems = getToDoLists();
@@ -37,12 +38,13 @@ export default class ToDoCategories extends React.Component {
         let userMenuItemLength = userMenuItems.length;
 
         for (let i = 0; i < 4; i++) {
-            menu.push(
+            menu.push( 
                 <MenuItem key={menuItems[i].name}
                     active={this.state.active === i}
                     icon={menuItems[i].icon}
                     color={menuItems[i].color}
                     name={menuItems[i].name}
+                    lang={this.props.lang.delete_list}
                     onClick={() => {
                         this.setState({ active: i }, this.componentDidMount)
                         this.props.changeCategory(i);
@@ -54,12 +56,16 @@ export default class ToDoCategories extends React.Component {
         menu.push(<Divider key={"1"} />);
         menu.push(
             <h4 style={{ marginTop: 0 }} key="2">
-                Listy zadań ({userMenuItemLength}/8)
+                {this.props.lang.tasks_lists} ({userMenuItemLength}/8)
                 <Icon name="plus" color="green" className="float-right cursor-pointer" onClick={() => this.setState({ addListOpen: true })} />
             </h4>
         )
 
         for (let i = 0; i < userMenuItemLength; i++) {
+            if (userMenuItems[i].name === "Osobiste") userMenuItems[i].name = this.props.lang.personal;
+            else if (userMenuItems[i].name === "Praca") userMenuItems[i].name = this.props.lang.work;
+            else if (userMenuItems[i].name === "Dom") userMenuItems[i].name = this.props.lang.house;
+
             menu.push(
                 <MenuItem key={userMenuItems[i].name + i}
                     active={this.state.active === i + 4}
@@ -67,6 +73,7 @@ export default class ToDoCategories extends React.Component {
                     id={userMenuItems[i].id}
                     color={userMenuItems[i].color}
                     name={userMenuItems[i].name}
+                    lang={this.props.lang.delete_list}
                     onClick={() => {
                         this.setState({ active: i + 4 }, this.componentDidMount);
                         this.props.changeCategory(i + 4);
@@ -97,6 +104,7 @@ export default class ToDoCategories extends React.Component {
                 icon={menuItems[4].icon}
                 color={menuItems[4].color}
                 name={menuItems[4].name}
+                lang={this.props.lang.delete_list}
                 onClick={() => {
                     this.setState({ active: 12 }, this.componentDidMount);
                     this.props.changeCategory(12);
@@ -104,7 +112,7 @@ export default class ToDoCategories extends React.Component {
             />
         );
 
-        this.setState({ menu: menu, userListsCount: userMenuItemLength });
+        this.setState({ menu: menu, userListsCount: userMenuItemLength, today: this.props.lang.today });
     }
 
     addLists() {
@@ -145,6 +153,8 @@ export default class ToDoCategories extends React.Component {
     }
 
     render() {
+        if(this.state.today !== this.props.lang.today) this.componentDidMount();
+
         if (this.state.userListsCount !== -1) {
             return (
                 <div>
@@ -155,7 +165,8 @@ export default class ToDoCategories extends React.Component {
                         onOpen={() => this.setState({ addListOpen: true })}
                         addLists={() => this.addLists()}
                         dontUpdate={() => this.setState({ update: false })}
-                        update={this.state.update} />
+                        update={this.state.update}
+                        lang={this.props.lang.add_lists} />
                 </div>
             );
         }

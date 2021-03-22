@@ -59,6 +59,7 @@ export default class AddListsModal extends React.Component {
     }
 
     render() {
+        const lang = this.props.lang;
         if (this.state.update !== this.props.update) this.setState({ update: this.props.update })
         if (this.state.update && (this.state.newLists.length > 0 || this.state.userListsCount === 8)) {
             this.setState({ update: false }, this.componentDidMount)
@@ -67,21 +68,21 @@ export default class AddListsModal extends React.Component {
         return (
             <Modal onClose={this.props.onClose} onOpen={this.props.onOpen} open={this.props.open} size='small'>
                 <Header icon>
-                    Dodaj nowe listy (pozostało: {8 - this.state.userListsCount})
+                    {lang.add_new_lists} ({lang.available}: {8 - this.state.userListsCount})
                 </Header>
                 <Modal.Content>
                     {this.state.newLists.map((elem, index) => {
-                        if (elem === "stop") return <div key={elem} className="text-center mt-05">Osiągnięto limit list</div>
-                        else if (elem === "start") return <div key={elem} className="text-center mt-05">Dodaj nowe listy</div>
-                        else return <NewList key={elem} i={index} onClick={() => this.deleteNewList(index)} />
+                        if (elem === "stop") return <div key={elem} className="text-center mt-05">{lang.reached_lists_limit}</div>
+                        else if (elem === "start") return <div key={elem} className="text-center mt-05">{lang.add_new_lists}</div>
+                        else return <NewList key={elem} i={index} onClick={() => this.deleteNewList(index)} lang={lang} />
                     })}
                     <div className="subtask add-subtask cursor-pointer" onClick={() => this.pushNewList(false)} style={{ margin: 0, paddingLeft: 0 }}>
-                        <Icon color="green" name="plus circle" />Dodaj następną liste
+                        <Icon color="green" name="plus circle" />{lang.add_next_list}
                     </div>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button basic color='red' icon="remove" content="Anuluj" onClick={this.props.onClose} />
-                    <Button color='green' icon="checkmark" content="Dodaj" onClick={() => { this.props.addLists(); this.props.onClose() }} />
+                    <Button basic color='red' icon="remove" content={lang.cancel} onClick={this.props.onClose} />
+                    <Button color='green' icon="checkmark" content={lang.add} onClick={() => { this.props.addLists(); this.props.onClose() }} />
                 </Modal.Actions>
             </Modal>
         );

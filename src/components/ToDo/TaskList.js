@@ -8,7 +8,7 @@ import UserList from './UserList';
 import Archive from './Archive';
 
 import getToDoLists from '../../services/To-Do/getToDoLists';
-import getTasks  from '../../services/To-Do/getTasks';
+import getTasks from '../../services/To-Do/getTasks';
 
 export default class TaskList extends React.Component {
     constructor(props) {
@@ -44,12 +44,67 @@ export default class TaskList extends React.Component {
         const active = this.props.active;
         let show = [];
 
-        if (active === 0) show.push(<Today key={active} tasks={this.state.tasks} lists={this.state.userLists} update={this.updateTasks} />);
-        else if (active === 1) show.push(<Next7Days key={active} tasks={this.state.tasks} lists={this.state.userLists} update={this.updateTasks} />);
-        else if (active === 2) show.push(<Important key={active} tasks={this.state.tasks} lists={this.state.userLists} update={this.updateTasks} />);
-        else if (active === 3) show.push(<Overdue key={active} tasks={this.state.tasks} lists={this.state.userLists} update={this.updateTasks} />);
-        else if (active > 3 && active < 12) show.push(<UserList key={active} tasks={this.state.tasks} listId={active} lists={this.state.userLists} update={this.updateTasks} />);
-        else if (active === 12) show.push(<Archive key={active} tasks={this.state.tasks} lists={this.state.userLists} update={this.updateTasks} />)
+        if (active === 0) {
+            show.push(
+                <Today key={active}
+                    tasks={this.state.tasks}
+                    lists={this.state.userLists}
+                    update={this.updateTasks}
+                    lang={this.props.lang}
+                />
+            );
+        }
+        else if (active === 1) {
+            show.push(
+                <Next7Days key={active}
+                    tasks={this.state.tasks}
+                    lists={this.state.userLists}
+                    update={this.updateTasks}
+                    lang={this.props.lang}
+                />
+            );
+        }
+        else if (active === 2) {
+            show.push(
+                <Important key={active}
+                    tasks={this.state.tasks}
+                    lists={this.state.userLists}
+                    update={this.updateTasks}
+                    lang={this.props.lang}
+                />
+            );
+        }
+        else if (active === 3) {
+            show.push(
+                <Overdue key={active}
+                    tasks={this.state.tasks}
+                    lists={this.state.userLists}
+                    update={this.updateTasks}
+                    lang={this.props.lang}
+                />
+            );
+        }
+        else if (active > 3 && active < 12) {
+            show.push(
+                <UserList key={active}
+                    tasks={this.state.tasks}
+                    listId={active}
+                    lists={this.state.userLists}
+                    update={this.updateTasks}
+                    lang={this.props.lang}
+                />
+            );
+        }
+        else if (active === 12) {
+            show.push(
+                <Archive key={active}
+                    tasks={this.state.tasks}
+                    lists={this.state.userLists}
+                    update={this.updateTasks}
+                    lang={this.props.lang}
+                />
+            )
+        }
 
         return show;
     }

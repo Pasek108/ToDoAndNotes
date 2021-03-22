@@ -20,7 +20,7 @@ export default function addSubtask(id, newSubtask) {
             sub_tasks: localStorageTask[11]
         };
 
-        if (task.id === id) {
+        if (task.id === `${id}`) {
             let subTasks = [];
 
             if (task.sub_tasks !== "") {

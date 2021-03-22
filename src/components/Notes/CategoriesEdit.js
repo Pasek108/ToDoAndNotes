@@ -37,20 +37,28 @@ export default class CategoriesEdit extends React.Component {
     createCategoriesList() {
         let categoriesList = [];
         let keys = this.state.keys;
+        const work = this.props.lang.work;
+        const poems = this.props.lang.poems;
 
         for (let i = 1; i < this.props.categories.length - 1; i++) {
             if (this.state.keys.length === 0) {
                 const key = this.keyCount++;
                 keys.push(key);
             }
+
+            let name = this.props.categories[i].name;
+            if (name === "Praca") name = work;
+            else if (name === "Wiersze") name = poems;
+
             categoriesList.push(
                 <CategoriesListElement
                     key={keys[i - 1]}
                     handleChangeComplete={this.handleChangeComplete}
-                    name={this.props.categories[i].name}
+                    name={name}
                     color={this.state.colors[i]} i={i}
                     deleteCategory={this.deleteCategory}
                     categoryNameChange={this.categoryNameChange}
+                    lang={this.props.lang}
                 />
             );
         }
@@ -87,7 +95,7 @@ export default class CategoriesEdit extends React.Component {
         this.setState({ colors: colors }, () => {
             let categoriesList = this.props.categories;
             categoriesList.splice(categoriesList.length - 1, 0, {
-                name: "(Kliknij aby zmienić nazwe)",
+                name: "(" + this.props.lang.click_to_change_name + ")",
                 color: "#FBBD08"
             });
             this.setState({ categoriesList: categoriesList }, () => {
@@ -106,6 +114,7 @@ export default class CategoriesEdit extends React.Component {
                         color={this.state.colors[i]} i={i}
                         deleteCategory={this.deleteCategory}
                         categoryNameChange={this.categoryNameChange}
+                        lang={this.props.lang}
                     />
                 );
 
@@ -134,7 +143,7 @@ export default class CategoriesEdit extends React.Component {
         let colors = this.state.colors;
         for (let j = 0; j < categoriesList.length; j++) {
             let name = categoriesList[j].name.trim();
-            if (name === "(Kliknij aby zmienić nazwe)") name = "Nowa kategoria";
+            if (name === "(" + this.props.lang.click_to_change_name + ")") name = this.props.lang.new_category;
 
             categoriesList[j].name = name.slice(0, 20);
             categoriesList[j].color = colors[j];
@@ -148,8 +157,9 @@ export default class CategoriesEdit extends React.Component {
         return (
             <div>
                 <h2>
-                    Liczba kategorii [{this.state.countCategories}/8]
+                    {this.props.lang.number_of_categories} [{this.state.countCategories}/8]
                     <Icon name="add circle" color="green"
+                        title={this.props.lang.add_category}
                         style={{ marginLeft: ".5rem" }}
                         className="cursor-pointer"
                         onClick={this.addCategory}
@@ -163,7 +173,7 @@ export default class CategoriesEdit extends React.Component {
                     </Transition.Group>
                 </Accordion>
                 <Button style={{ margin: "2rem 0 0 44.1%" }} color="green" onClick={this.updateCategories}>
-                    <Icon style={{ opacity: "1" }} name="save" /> Zapisz
+                    <Icon style={{ opacity: "1" }} name="save" /> {this.props.lang.save}
                 </Button>
             </div>
         );

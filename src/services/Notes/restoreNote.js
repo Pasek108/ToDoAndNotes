@@ -1,6 +1,6 @@
 import { getLocalStorageCounter, getLocalStorageItem, setNote } from '../helperFunctions';
 
-export default function backupNote(id) {
+export default function restoreNote(id) {
     const notesCount = getLocalStorageCounter("countNotes");
     let newNote = {};
 

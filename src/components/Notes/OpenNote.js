@@ -70,6 +70,7 @@ export default class OpenNote extends React.Component {
     render() {
         const note = this.state.note;
         const align = this.state.note.align;
+        const lang = this.props.lang;
 
         return (
             <div>
@@ -84,7 +85,7 @@ export default class OpenNote extends React.Component {
                                 fontWeight: "700",
                                 padding: ".1rem .5rem"
                             }}
-                            rows="1" maxLength="50" placeholder="Tytuł"
+                            rows="1" maxLength="50" placeholder={lang.title}
                             className="note-title" value={note.title}
                             id="title" onChange={() => this.handleTextareaChange("title")}
                         />
@@ -96,10 +97,9 @@ export default class OpenNote extends React.Component {
                     ? (
                         <Button color="grey"
                             style={{ float: "right", borderRadius: 0, fontSize: "1.2rem", padding: ".75rem 1rem .75rem 2.7rem", position: "relative" }}
-                            onClick={() => { this.props.backupNote(note.id) }} >
-                            <Icon title="Przywróć" name="history"
-                                style={{ opacity: 1, fontSize: "1.4rem", left: "1rem", position: "absolute" }} />
-                            Przywróć
+                            onClick={() => { this.props.restoreNote(note.id) }} >
+                            <Icon name="history" style={{ opacity: 1, fontSize: "1.4rem", left: "1rem", position: "absolute" }} />
+                            {lang.restore}
                         </Button>
                     )
                     : (
@@ -107,18 +107,16 @@ export default class OpenNote extends React.Component {
                             <Button color="blue" className="mx-auto"
                                 style={{ float: "right", borderRadius: 0, fontSize: "1.4rem", height: "2em", padding: ".5em 1rem .5em 2.7rem", position: "relative" }}
                                 onClick={() => { this.handleTextareaChange("note"); this.handleTextareaChange("title"); this.setState(state => ({ edit: !state.edit })) }} >
-                                <Icon name={(this.state.edit) ? "eye" : "pencil"}
-                                    title={(this.state.edit) ? "Podgląd" : "Edytuj"}
-                                    style={{ opacity: 1, fontSize: "1.4rem", left: "1rem", position: "absolute" }} />
+                                <Icon name={(this.state.edit) ? "eye" : "pencil"} style={{ opacity: 1, fontSize: "1.4rem", left: "1rem", position: "absolute" }} />
                                 {(this.state.edit)
-                                    ? <div style={{ fontSize: "1.2rem" }}>Podgląd</div>
-                                    : <div style={{ fontSize: "1.2rem" }}>Edytuj</div>
+                                    ? <div style={{ fontSize: "1.2rem" }}>{lang.preview}</div>
+                                    : <div style={{ fontSize: "1.2rem" }}>{lang.edit}</div>
                                 }
                             </Button>
 
                             {(note.category === "Nowa notatka")
                                 ? (<div />) : (
-                                    <Icon bordered inverted title="Przypnij notatke"
+                                    <Icon bordered inverted title={lang.pin_note}
                                         name="bookmark" className="cursor-pointer"
                                         color="orange" style={{ float: "right", fontSize: "1.4rem" }}
                                         onClick={() => { }} />
@@ -135,23 +133,23 @@ export default class OpenNote extends React.Component {
                     : (
                         <div style={{ float: "left", width: "100%", margin: "1rem 0" }}>
                             <div className="ui icon buttons">
-                                <Button title="Pogrubienie" icon="bold" onClick={this.handleClick} className="textarea-edit-icon" />
-                                <Button title="Pochylenie" icon="italic" onClick={this.handleClick} className="textarea-edit-icon" />
-                                <Button title="Podkreślenie" icon="underline" onClick={this.handleClick} className="textarea-edit-icon" />
-                                <Button title="Przekreślenie" icon="strikethrough" onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.bold} icon="bold" onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.italics} icon="italic" onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.underline} icon="underline" onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.strikethrough} icon="strikethrough" onClick={this.handleClick} className="textarea-edit-icon" />
                             </div>
 
                             <div className="ui icon buttons">
-                                <Button title="Wyrównanie do lewej" icon="align left" active={align === "left"} onClick={this.handleClick} className="textarea-edit-icon" />
-                                <Button title="Wśrodkowanie" icon="align center" active={align === "center"} onClick={this.handleClick} className="textarea-edit-icon" />
-                                <Button title="Wyrównanie do prawej" icon="align right" active={align === "right"} onClick={this.handleClick} className="textarea-edit-icon" />
-                                <Button title="Wyjustowanie" icon="align justify" active={align === "justify"} onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.align_text_left} icon="align left" active={align === "left"} onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.center_text} icon="align center" active={align === "center"} onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.align_text_right} icon="align right" active={align === "right"} onClick={this.handleClick} className="textarea-edit-icon" />
+                                <Button title={lang.justify_text} icon="align justify" active={align === "justify"} onClick={this.handleClick} className="textarea-edit-icon" />
                             </div>
 
                             <Button color="green" className="mx-auto"
                                 style={{ float: "right", padding: ".70rem 1rem", fontSize: "1.1rem" }}
                                 onClick={() => { this.handleTextareaChange("note"); this.handleTextareaChange("title"); this.props.saveNote(note) }}>
-                                <Icon name="save" style={{ opacity: "1" }} /> Zapisz
+                                <Icon name="save" style={{ opacity: "1" }} /> {lang.save}
                             </Button>
                         </div>
                     )}

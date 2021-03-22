@@ -13,27 +13,27 @@ export default function MenuItem(props) {
             trigger={
                 <Icon name="delete" color="red"
                     style={{ float: "right", position: "static" }}
-                    onClick={(e) => e.stopPropagation()} />
+                    onClick={(e) => e.stopPropagation()} /> 
             }
             onClose={() => { setWarningOpen(false); setMouseOverFlag(false) }}
             onOpen={() => setWarningOpen(true)}
             open={openWarning} >
 
             <Modal.Header className="color-red">
-                <Icon name='warning sign' /> UWAGA!
+                <Icon name='warning sign' /> {props.lang.warning}!
             </Modal.Header>
 
             <Modal.Content>
-                <p>Usunięcie listy spowoduje trwałe usunięcie znajdujących się w niej zadań</p>
+                <p>{props.lang.warning_text}</p>
             </Modal.Content>
 
             <Modal.Actions>
                 <Button
-                    basic color='red' inverted icon="remove" content="Anuluj"
+                    basic color='red' inverted icon="remove" content={props.lang.cancel}
                     onClick={() => { setWarningOpen(false); setMouseOverFlag(false) }} />
 
                 <Button
-                    color='green' inverted icon="checkmark" content="Potwierdż"
+                    color='green' inverted icon="checkmark" content={props.lang.confirm}
                     onClick={(e) => {
                         e.stopPropagation();
                         setWarningOpen(false);

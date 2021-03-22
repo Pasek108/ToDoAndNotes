@@ -16,7 +16,8 @@ export default class Task extends React.Component {
             editSubTasks: [],
             countEditSubtasks: 0,
             showAddSubTaskModal: false,
-            showEditTaskModal: false
+            showEditTaskModal: false,
+            save: props.lang.save
         }
 
         this.addSubTask = this.addSubTask.bind(this);
@@ -27,6 +28,7 @@ export default class Task extends React.Component {
         const parameters = { day: true, month: true, year: true, hours: true, minutes: true }
 
         this.setState({
+            save: this.props.lang.save,
             countEditSubtasks: this.state.subTasks.length,
             editSubTasks: this.state.subTasks.map((elem, index) => {
                 const subTaskDate = calculateDateAndTime(elem.date_of_execute, parameters);
@@ -35,13 +37,25 @@ export default class Task extends React.Component {
                         <details key={index}>
                             <summary className="cursor-pointer mb-1">{elem.name}</summary>
                             <div>
-                                <input type="text" className="new-subtask edit-subtask-name" placeholder="Nazwa zadania podrzędnego" defaultValue={elem.name} style={{ width: "calc(100% - 1.5rem)" }} />
-                                <input type="text" className="new-subtask edit-subtask-description" placeholder="Opis " defaultValue={elem.description} style={{ width: "calc(100% - 1.5rem)" }} />
+                                <input type="text"
+                                    className="new-subtask edit-subtask-name"
+                                    placeholder={this.props.lang.subtask_name}
+                                    defaultValue={elem.name}
+                                    style={{ width: "calc(100% - 1.5rem)" }} />
+                                <input type="text"
+                                    className="new-subtask edit-subtask-description"
+                                    placeholder={this.props.lang.description}
+                                    defaultValue={elem.description}
+                                    style={{ width: "calc(100% - 1.5rem)" }} />
                                 <div>
                                     <input type="datetime-local"
                                         className="new-subtask-date edit-subtask-date"
                                         min="2000-01-01T00:00:00" max="2038-01-01T00:00:00"
-                                        defaultValue={(elem.date_of_execute !== 0) ? `${subTaskDate.year}-${subTaskDate.month}-${subTaskDate.day}T${subTaskDate.hours}:${subTaskDate.minutes}:00` : ""} />
+                                        defaultValue={
+                                            (elem.date_of_execute !== 0)
+                                                ? `${subTaskDate.year}-${subTaskDate.month}-${subTaskDate.day}T${subTaskDate.hours}:${subTaskDate.minutes}:00`
+                                                : ""
+                                        } />
 
                                     <div className="delete-subtask" onClick={() => {
                                         this.setState((state) => ({
@@ -51,7 +65,7 @@ export default class Task extends React.Component {
                                             }),
                                             countEditSubtasks: state.countEditSubtasks - 1
                                         }))
-                                    }}>Usuń</div>
+                                    }}>{this.props.lang.delete}</div>
                                 </div>
                                 <Divider />
                             </div>
@@ -79,9 +93,10 @@ export default class Task extends React.Component {
             checked: 1 - 1
         };
 
-        subTasks.push(subTask);
-
         addSubtask(this.props.task.id, subTask);
+
+        subTask.checked = false;
+        subTasks.push(subTask);
 
         this.setState({ subTasks: subTasks });
     }
@@ -133,6 +148,9 @@ export default class Task extends React.Component {
     }
 
     render() {
+        const lang = this.props.lang;
+        if (this.state.save !== lang.save) this.componentDidMount();
+
         const task = this.state.task;
         const lists = this.props.lists;
         const parameters = { day: true, month: true, year: true, hours: true, minutes: true }
@@ -141,6 +159,10 @@ export default class Task extends React.Component {
         let list = {};
         for (let i = 0; i < lists.length; i++) {
             if (lists[i].id === task.list_id) {
+                if (lists[i].name === "Osobiste") lists[i].name = lang.personal;
+                else if (lists[i].name === "Praca") lists[i].name = lang.work;
+                else if (lists[i].name === "Dom") lists[i].name = lang.house;
+
                 list = lists[i];
             }
         }
@@ -196,20 +218,20 @@ export default class Task extends React.Component {
                                 open={this.state.showAddSubTaskModal}
                                 trigger={
                                     <div className="subtask add-subtask cursor-pointer" style={{ marginTop: 0 }}>
-                                        <Icon color="green" name="plus circle" />Dodaj zadanie podrzędne
+                                        <Icon color="green" name="plus circle" />{lang.add_subtask}
                                     </div>
                                 }>
-                                <Header icon>Dodaj zadanie podrzędne</Header>
+                                <Header icon>{lang.add_subtask}</Header>
                                 <Modal.Content>
-                                    <input type="text" className="new-subtask" placeholder="Nazwa zadania podrzędnego" />
-                                    <input type="text" className="new-subtask" placeholder="Opis " />
+                                    <input type="text" className="new-subtask" placeholder={lang.subtask_name} />
+                                    <input type="text" className="new-subtask" placeholder={lang.description} />
                                     <div>
                                         <input type="datetime-local" className="new-subtask-date" min="2000-01-01T00:00:00" max="2038-01-01T00:00:00" />
                                     </div>
                                 </Modal.Content>
                                 <Modal.Actions>
-                                    <Button basic color='red' icon="remove" content="Anuluj" onClick={() => this.setState({ showAddSubTaskModal: false })} />
-                                    <Button color='green' icon="checkmark" content="Dodaj" onClick={() => { this.addSubTask(); this.setState({ showAddSubTaskModal: false }) }} />
+                                    <Button basic color='red' icon="remove" content={lang.cancel} onClick={() => this.setState({ showAddSubTaskModal: false })} />
+                                    <Button color='green' icon="checkmark" content={lang.add} onClick={() => { this.addSubTask(); this.setState({ showAddSubTaskModal: false }) }} />
                                 </Modal.Actions>
                             </Modal>
 
@@ -224,7 +246,7 @@ export default class Task extends React.Component {
                                             <div className="ml-1">{`${date.day}-${date.month}-${date.year}`}</div>
                                         </div>
                                     )
-                                    : <div className="task-date">Brak terminu</div>
+                                    : <div className="task-date">{lang.no_term}</div>
                                 }
                                 <div className="task-list"><Icon name="circle" style={{ color: list.color }} /> {list.name}</div>
 
@@ -235,19 +257,19 @@ export default class Task extends React.Component {
                                     trigger={
                                         <div>
                                             <Button color="blue" className="task-edit-button">
-                                                <Icon className="cursor-pointer float-right" name="pencil" /> Edytuj
+                                                <Icon className="cursor-pointer float-right" name="pencil" /> {lang.edit}
                                             </Button>
                                         </div>
                                     }>
-                                    <Header icon>Edytuj zadanie</Header>
+                                    <Header icon>{lang.edit_task}</Header>
 
                                     <Modal.Content>
                                         <div className="edit-task-important">
                                             <input type="checkbox" id="important" defaultChecked={task.important} />
-                                            <label htmlFor="important">Ważne</label>
+                                            <label htmlFor="important">{lang.important}</label>
                                         </div>
-                                        <input type="text" className="new-subtask edit-task-name" placeholder="Nazwa zadania" defaultValue={task.title} />
-                                        <input type="text" className="new-subtask edit-task-description" placeholder="Opis zadania" defaultValue={task.description} />
+                                        <input type="text" className="new-subtask edit-task-name" placeholder={lang.task_name} defaultValue={task.title} />
+                                        <input type="text" className="new-subtask edit-task-description" placeholder={lang.task_description} defaultValue={task.description} />
                                         <div style={{ display: "inline-block", width: "50%" }}>
                                             <input type="datetime-local"
                                                 className="new-subtask-date edit-task-date"
@@ -255,7 +277,7 @@ export default class Task extends React.Component {
                                                 defaultValue={(task.date_of_execute !== 0) ? `${date.year}-${date.month}-${date.day}T${date.hours}:${date.minutes}:00` : ""} />
                                         </div>
                                         <div style={{ display: "inline-block", width: "50%", textAlign: "right" }}>
-                                            Lista:
+                                            {lang.list}:
                                             <select className="edit-task-select" defaultValue={list.id}>
                                                 {lists.map(elem => {
                                                     return <option key={elem.id} value={elem.id}>{elem.name}</option>
@@ -266,7 +288,7 @@ export default class Task extends React.Component {
                                             ? (
                                                 <div>
                                                     <Divider />
-                                                    <Header as="h4" className="mt-0">Zadania podrzędne:</Header>
+                                                    <Header as="h4" className="mt-0">{lang.subtasks}:</Header>
                                                     {this.state.editSubTasks}
                                                 </div>
                                             )
@@ -274,8 +296,8 @@ export default class Task extends React.Component {
                                     </Modal.Content>
 
                                     <Modal.Actions>
-                                        <Button basic color='red' icon="remove" content="Anuluj" onClick={() => this.setState({ showEditTaskModal: false }, this.componentDidMount)} />
-                                        <Button color='green' icon="checkmark" content="Zapisz" onClick={() => { this.editTask(); this.setState({ showEditTaskModal: false }) }} />
+                                        <Button basic color='red' icon="remove" content={lang.cancel} onClick={() => this.setState({ showEditTaskModal: false }, this.componentDidMount)} />
+                                        <Button color='green' icon="checkmark" content={lang.save} onClick={() => { this.editTask(); this.setState({ showEditTaskModal: false }) }} />
                                     </Modal.Actions>
                                 </Modal>
                             </div>

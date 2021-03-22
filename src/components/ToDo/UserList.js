@@ -11,7 +11,7 @@ import addTask from '../../services/To-Do/addTask';
 export default function UserList(props) {
     const [activeIndex, setActive] = useState(-1);
 
-    let show = [<div key="empty" className="text-center"><h4>Brak zadań</h4></div>];
+    let show = [<div key="empty" className="text-center"><h4>{props.lang.no_tasks}</h4></div>];
     let accordions = [];
 
     const parameters = { day: true, month: true, year: true };
@@ -52,7 +52,7 @@ export default function UserList(props) {
 
                 if (!task.archive && task.list_id === props.listId) {
                     if (isDateEqual(taskTerm, date)) {
-                        filteredTasks.push(<Task key={key++} task={task} lists={props.lists} update={props.update} />);
+                        filteredTasks.push(<Task key={key++} task={task} lists={props.lists} update={props.update} lang={props.lang.task} />);
                         taskDates.push({
                             date: task.date_of_execute,
                             important: task.important
@@ -89,12 +89,12 @@ export default function UserList(props) {
     let showNoTerm = props.tasks.map((elem, index, array) => {
         if (elem.date_of_execute === 0 && elem.list_id === props.listId) {
             empty = false;
-            return <Task key={index} task={elem} lists={props.lists} />;
+            return <Task key={index} task={elem} lists={props.lists} lang={props.lang.task} />;
         }
-        else if (index === array.length - 1 && empty === true) return <div key="empty" className="text-center"><h4>Brak zadań</h4></div>;
+        else if (index === array.length - 1 && empty === true) return <div key="empty" className="text-center"><h4>{props.lang.no_tasks}</h4></div>;
         else return "";
     });
-    if (showNoTerm.length === 0) showNoTerm = <div key="empty" className="text-center"><h4>Brak zadań</h4></div>;
+    if (showNoTerm.length === 0) showNoTerm = <div key="empty" className="text-center"><h4>{props.lang.no_tasks}</h4></div>;
 
     function addNewTask() {
         const newTask = document.getElementsByClassName("new-task")[0];
@@ -130,8 +130,8 @@ export default function UserList(props) {
                 <Grid.Row>
                     <Grid.Column width="3" />
                     <Grid.Column width="10">
-                        <input type="text" className="new-task" placeholder="Nowe zadanie" />
-                        <button className="add-new-task cursor-pointer" onClick={addNewTask}>Dodaj</button>
+                        <input type="text" className="new-task" placeholder={props.lang.new_task} />
+                        <button className="add-new-task cursor-pointer" onClick={addNewTask}>{props.lang.add}</button>
                     </Grid.Column>
                     <Grid.Column width="3" />
                 </Grid.Row>
@@ -139,14 +139,14 @@ export default function UserList(props) {
 
             <Accordion>
                 <Accordion.Title active={activeIndexTerm === 0} index={0} onClick={() => { (activeIndexTerm === 0) ? setActiveTerm(-1) : setActiveTerm(0) }}>
-                    <Icon name='dropdown' /> Z terminem
+                    <Icon name='dropdown' /> {props.lang.with_term}
                         </Accordion.Title>
                 <Accordion.Content active={activeIndexTerm === 0}>
                     <Accordion>{show}</Accordion>
                 </Accordion.Content>
 
                 <Accordion.Title active={activeIndexTerm === 1} index={1} onClick={() => { (activeIndexTerm === 1) ? setActiveTerm(-1) : setActiveTerm(1) }}>
-                    <Icon name='dropdown' /> Bez terminu
+                    <Icon name='dropdown' /> {props.lang.without_term}
                 </Accordion.Title>
                 <Accordion.Content active={activeIndexTerm === 1}>
                     {showNoTerm}

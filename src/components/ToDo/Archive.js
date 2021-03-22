@@ -9,7 +9,7 @@ import { calculateDateAndTime, sortAccordionsByDate, isDateEqual, sortTasks } fr
 export default function Archive(props) {
     const [activeIndex, setActive] = useState(-1);
 
-    let show = [<div key="empty" className="text-center mt-40vh"><h3>Brak zadań</h3></div>];
+    let show = [<div key="empty" className="text-center mt-40vh"><h3>{props.lang.no_tasks}</h3></div>];
     let accordions = [];
 
     const parameters = { day: true, month: true, year: true };
@@ -78,7 +78,7 @@ export default function Archive(props) {
 
             if (task.archive) {
                 if (isDateEqual(taskTerm, date)) {
-                    filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} />);
+                    filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} lang={props.lang.task} />);
                     taskDates.push({
                         date: task.date_of_execute,
                         important: task.important
@@ -88,7 +88,7 @@ export default function Archive(props) {
                     for (let k = 0; k < subTasks.length; k++) {
                         const subTaskTerm = calculateDateAndTime(subTasks[k].date_of_execute, parameters);
                         if (isDateEqual(subTaskTerm, date)) {
-                            filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} />);
+                            filteredTasks.push(<Task key={j} task={task} lists={props.lists} update={props.update} lang={props.lang.task} />);
                             taskDates.push({
                                 date: subTasks[k].date_of_execute,
                                 important: task.important

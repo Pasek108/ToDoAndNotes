@@ -43,12 +43,23 @@ export default class Categories extends React.Component {
   }
 
   componentDidMount() {
+    const all = this.props.lang.all;
+    const work = this.props.lang.work;
+    const poems = this.props.lang.poems;
+    const recyle = this.props.lang.recyle_bin;
+
     this.setState({
       categories: this.props.categories.map((elem, index) => {
+        let name = elem.name;
+        if (name === "Wszystkie") name = all;
+        else if (name === "Praca") name = work;
+        else if (name === "Wiersze") name = poems;
+        else if (name === "Kosz") name = recyle;
+
         return (
           <Category
             key={elem.name + index}
-            name={elem.name}
+            name={name}
             color={elem.color}
             index={this.state.activeIndex} i={index}
             handleAccordionClick={this.handleAccordionClick}
@@ -74,7 +85,17 @@ export default class Categories extends React.Component {
 
   handleAccordionClick(e, titleProps) {
     const { index } = titleProps
-    const currentTarget = e.currentTarget.innerHTML;
+    let currentTarget = e.currentTarget.innerHTML;
+    const all = this.props.lang.all;
+    const work = this.props.lang.work;
+    const poems = this.props.lang.poems;
+    const recyle = this.props.lang.recyle_bin;
+
+    if (currentTarget === all) currentTarget = "Wszystkie";
+    else if (currentTarget === work) currentTarget = "Praca";
+    else if (currentTarget === poems) currentTarget = "Wiersze";
+    else if (currentTarget === recyle) currentTarget = "Kosz";
+
     this.setState({ activeIndex: index }, () => {
       this.componentDidMount();
       this.props.handleCategoryChange(currentTarget);
@@ -86,14 +107,14 @@ export default class Categories extends React.Component {
       <div className="ui relaxed divided items">
         <Item>
           <Button className="mx-auto mt-1" color="green" onClick={this.handleAddButtonClick}>
-            <Icon style={{ opacity: "1" }} name="plus" /> Dodaj notatke
-            </Button>
+            <Icon style={{ opacity: "1" }} name="plus" /> {this.props.lang.add_note}
+          </Button>
         </Item>
 
         <h4 className="mt-1">
-          Kategorie
-            <Icon
-            title="Edutuj kategorie"
+          {this.props.lang.categories}
+          <Icon
+            title={this.props.lang.edit_categories}
             color="grey" size="large" name="setting"
             onClick={this.handleEditCategoriesClick}
             className="edit-categories-icon"
@@ -107,7 +128,7 @@ export default class Categories extends React.Component {
         </Item>
         <div className="mb-6" />
 
-        <HelpAndContact onClick={this.props.onClick} />
+        <HelpAndContact onClick={this.props.onClick} lang={this.props.lang} />
       </div>
     );
   }

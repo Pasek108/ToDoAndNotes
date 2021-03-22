@@ -10,8 +10,8 @@ export default function deleteUserList(id) {
         const menuItem = getLocalStorageItem(`menu${i}`);
         const userList = {
             id: parseInt(menuItem[0]),
-            name: menuItem[1],
-            color: menuItem[2]
+            name: menuItem[2],
+            color: menuItem[1]
         };
 
         if (userList.id === id) {

@@ -14,13 +14,14 @@ export default function CategoriesListElement(props) {
                     width={14} contentEditable
                     suppressContentEditableWarning
                     className="category-edit-name"
+                    title={props.lang.click_to_change_name}
                     onKeyUp={(e) => props.categoryNameChange(e, props.i)}>
                     {props.name}
                 </Grid.Column>
                 <Grid.Column width={2} className="text-right">
                     <Item>
                         <Popup
-                            trigger={<Icon bordered inverted color="blue" name="tint" className="cursor-pointer" />}
+                            trigger={<Icon bordered inverted color="blue" name="tint" className="cursor-pointer" title={props.lang.change_color} />}
                             content={<ColorPicker i={props.i} color={props.color} handleChangeComplete={props.handleChangeComplete} />}
                             on='click'
                             position='left center'
@@ -29,6 +30,7 @@ export default function CategoriesListElement(props) {
                             bordered inverted
                             color="red" name="close"
                             className="cursor-pointer"
+                            title={props.lang.delete}
                             onClick={() => props.deleteCategory(props.i)}
                         />
                     </Item>

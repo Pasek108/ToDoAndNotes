@@ -13,12 +13,12 @@ function ToDo(props) {
       <Grid columns={2} divided style={{ minHeight: "calc(100vh - 5.2rem)", paddingBottom: "1rem" }}>
         <Grid.Row className="p-0">
           <Grid.Column width={3} className="p-1">
-            <ToDoCategories active={openedCategory} changeCategory={(id) => changeCategory(id)} />
-            <HelpAndContact onClick={props.onClick} />
+            <ToDoCategories active={openedCategory} changeCategory={(id) => changeCategory(id)} lang={props.lang.lists} />
+            <HelpAndContact onClick={props.onClick} lang={props.lang.lists} />
           </Grid.Column>
 
           <Grid.Column width={13} className="p-1">
-            <TaskList active={openedCategory} />
+            <TaskList active={openedCategory} lang={props.lang.tasks_window} />
           </Grid.Column>
         </Grid.Row>
       </Grid>

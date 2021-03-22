@@ -26,10 +26,16 @@ export default class NotesListElement extends React.Component {
         }
         this.setState({ checkedCategories: checkedCategories }, () => {
             let newCategories = [];
+            const work = this.props.lang.work;
+            const poems = this.props.lang.poems;
 
-            if (categories.length < 3) newCategories.push("Brak kategorii");
+            if (categories.length < 3) newCategories.push(this.props.lang.no_categories);
             else {
                 for (let i = 1; i < categories.length - 1; i++) {
+                    let name = categories[i].name;
+                    if (name === "Praca") name = work;
+                    else if (name === "Wiersze") name = poems;
+
                     newCategories.push(
                         <Item key={i}>
                             <Checkbox
@@ -39,14 +45,14 @@ export default class NotesListElement extends React.Component {
                                     checkedCategories[i - 1] = !checkedCategories[i - 1];
                                     this.setState({ checkedCategories: checkedCategories })
                                 }}
-                                label={<label>{categories[i].name}</label>}
+                                label={<label>{name}</label>}
                             />
                         </Item>
                     );
                 }
                 newCategories.push(
                     <Button
-                        key={categories.length - 1} content="Zapisz" color="green"
+                        key={categories.length - 1} content={this.props.lang.save} color="green"
                         style={{ width: "100%", padding: ".5rem", marginTop: "1rem" }}
                         onClick={() => this.props.updateNoteCategories(this.state.note.id, this.state.checkedCategories)}
                     />
@@ -64,13 +70,14 @@ export default class NotesListElement extends React.Component {
     render() {
         const note = this.state.note;
         const trash = note.category[0] === "Kosz";
+        const lang = this.props.lang;
 
-        const backupOrEditIcon = (
+        const restoreOrEditIcon = (
             (trash)
                 ? (
                     <Icon
-                        title="Przywróć" name="history"
-                        onClick={() => this.props.backupNote(note.id)}
+                        title={lang.restore} name="history"
+                        onClick={() => this.props.restoreNote(note.id)}
                         bordered inverted color="grey" size="large"
                         className="cursor-pointer" style={{ fontSize: "1.3rem" }} />
                 )
@@ -85,7 +92,7 @@ export default class NotesListElement extends React.Component {
                         trigger={
                             <div style={{ display: "inline" }}>
                                 <Icon
-                                    title="Zmień kategorie" name="list alternate outline"
+                                    title={lang.change_categories} name="list alternate outline"
                                     onClick={() => ("")}
                                     bordered inverted color="grey" size="large"
                                     className="cursor-pointer" style={{ fontSize: "1.3rem" }} />
@@ -99,7 +106,7 @@ export default class NotesListElement extends React.Component {
             <Modal basic size='tiny'
                 trigger={
                     <Icon
-                        title={(trash) ? "Usuń" : "Przenieś do kosza"}
+                        title={(trash) ? lang.delete : lang.move_to_the_bin}
                         name={(trash) ? "delete" : "trash"}
                         bordered inverted color="red" size="large"
                         className="cursor-pointer mx-auto" style={{ fontSize: "1.3rem" }}
@@ -110,25 +117,25 @@ export default class NotesListElement extends React.Component {
                 open={this.state.warningOpen} >
 
                 <Modal.Header className="color-red">
-                    <Icon name='warning sign' /> UWAGA!
+                    <Icon name='warning sign' /> {lang.warning}!
                 </Modal.Header>
 
                 <Modal.Content>
                     {
                         (trash)
-                            ? <p>Usunięcie notatki z kosza jest trwałe, nie ma możliwości jej przywrócenia</p>
-                            : <p>Przniesienie notatki do kosza spowoduje nieodwracalne usunięcie przypisanych do niej kategorii</p>
+                            ? <p>{lang.warning_text_delete}</p>
+                            : <p>{lang.warning_text_move_to_the_bin}</p>
                     }
                 </Modal.Content>
 
                 <Modal.Actions>
 
                     <Button
-                        basic color='red' inverted icon="remove" content="Anuluj"
+                        basic color='red' inverted icon="remove" content={lang.cancel}
                         onClick={() => { this.setState({ warningOpen: false }); this.handleDateHover() }} />
 
                     <Button
-                        color='green' inverted icon="checkmark" content="Potwierdż"
+                        color='green' inverted icon="checkmark" content={lang.confirm}
                         onClick={() => { this.setState({ warningOpen: false }); this.props.deleteNote(note.id) }} />
 
                 </Modal.Actions>
@@ -149,7 +156,7 @@ export default class NotesListElement extends React.Component {
                         <Grid.Column width="3" className="text-right">
 
                             <Item className="mb-1">
-                                {backupOrEditIcon}
+                                {restoreOrEditIcon}
                                 {deleteIcon}
                             </Item>
 
