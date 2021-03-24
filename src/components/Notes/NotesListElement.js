@@ -144,7 +144,7 @@ export default class NotesListElement extends React.Component {
         );
 
         return (
-            <Segment className="mb-0" onMouseOver={this.handleDateHover} onMouseOut={this.handleDateHover}>
+            <Segment className="mb-0" onMouseOver={this.handleDateHover} onMouseOut={this.handleDateHover} style={{color: "black"}}>
                 <Grid columns="2">
                     <Grid.Row>
 

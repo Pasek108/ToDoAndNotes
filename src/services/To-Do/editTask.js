@@ -25,6 +25,7 @@ export default function editTask(editedTask) {
         archive: editedTask.archive,
         sub_tasks: editedTask.sub_tasks
     };
+    
     setTask(`task${editedTask.id}`, editedTask)
 
     const response = "Succes!";

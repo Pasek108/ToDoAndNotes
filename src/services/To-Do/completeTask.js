@@ -22,7 +22,7 @@ export default function taskCompleted(checkedTask, subtaskId = -1) {
                 name: subtask.name,
                 description: subtask.description,
                 date_of_execute: subtask.date_of_execute,
-                checked: subtask.checked
+                checked: "1"
             });
         }
     }
@@ -38,7 +38,10 @@ export default function taskCompleted(checkedTask, subtaskId = -1) {
     checkedTask.important = `${((checkedTask.important) ? 1 : 0)}`;
     checkedTask.repeat = `${((checkedTask.repeat) ? 1 : 0)}`;
     if (subtaskId > -1) checkedTask.archive = `${((checkedTask.archive) ? 1 : 0)}`;
-    else checkedTask.archive = `${((!checkedTask.archive) ? 1 : 0)}`;
+    else {
+        checkedTask.archive = `${((!checkedTask.archive) ? 1 : 0)}`;
+        checkedTask.sub_tasks = savedSubtasks;
+    }
 
     setTask(`task${checkedTask.id}`, checkedTask)
 

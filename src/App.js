@@ -142,7 +142,24 @@ const lang_en = {
     }
   },
   preferences: {
-
+    theme: "Theme",
+    dark_theme: "Dark theme",
+    auto_change_theme: "Auto change theme",
+    from: "From",
+    to: "To",
+    theme_type: "Theme type",
+    light: "Light",
+    dark: "Dark",
+    neutral: "Neutral",
+    warm: "Warm",
+    cold: "Cold",
+    import: "Import",
+    export: "Export",
+    other: "Others",
+    turn_off_animations: "Turn off animations",
+    turn_off_warnings: "Turn off warnings",
+    auto_save_notes: "Auto save notes",
+    restore_default_settings: "Restore default settings"
   },
   contact: {
     contact: "Contact",
@@ -300,7 +317,24 @@ const lang_pl = {
     }
   },
   preferences: {
-
+    theme: "Motyw",
+    dark_theme: "Ciemny motyw",
+    auto_change_theme: "Automatyczna zmiana motywu",
+    from: "Od",
+    to: "Do",
+    theme_type: "Typ motywu",
+    light: "Jasny",
+    dark: "Ciemny",
+    neutral: "Neutralny",
+    warm: "Ciepły",
+    cold: "Zimny",
+    import: "Import",
+    export: "Eksport",
+    other: "Pozostałe",
+    turn_off_animations: "Wyłącz animacje",
+    turn_off_warnings: "Wyłącz ostrzeżenia",
+    auto_save_notes: "Autozapis notatek",
+    restore_default_settings: "Przywróć ustawienia domyślne"
   },
   contact: {
     contact: "Kontakt",
@@ -348,7 +382,7 @@ class PageHeader extends React.Component {
     const activeLanguage = localStorage.getItem("lang");
 
     return (
-      <Menu tabular className="ui inverted menu">
+      <Menu tabular className="ui inverted menu" style={{color: "whitesmoke"}}>
         <Menu tabular className="ui inverted stackable container grid menu">
           <div className="header item three wide column" style={{ paddingLeft: "1.1rem", paddingRight: "0rem" }}>
             <div className="brand">To-do & notes</div>
@@ -388,11 +422,37 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (localStorage.getItem("lang") === undefined || localStorage.getItem("lang") === null) {
-      localStorage.setItem("lang", "pl");
+    const body = document.getElementsByTagName("body")[0];
+    const footer = document.getElementsByClassName("footer")[0];
+
+    const lightThemeType = localStorage.getItem("light_theme");
+    const lang = localStorage.getItem("lang");
+    const darkThemeOn = localStorage.getItem("darkThemeOn");
+
+    if (lang === undefined || lang === null) localStorage.setItem("lang", "pl");
+    else this.changeLanguage(undefined, lang);
+
+    if (lightThemeType === undefined || lightThemeType === null) {
+      localStorage.setItem("light_theme", "Neutral");
     }
     else {
-      this.changeLanguage(localStorage.getItem("lang"));
+      if (lightThemeType === "Neutral") body.style.backgroundColor = "#F1F1F1";
+      else if (lightThemeType === "Warm") body.style.backgroundColor = "#F0EDE5";
+      else body.style.backgroundColor = "#EDF1FF";
+
+      body.style.color = "black";
+    }
+
+    if (darkThemeOn === undefined || darkThemeOn === null) {
+      localStorage.setItem("light_theme", "Neutral");
+    }
+    else {
+      if (darkThemeOn === "true") {
+        body.style.backgroundColor = "#222222";
+        footer.style.backgroundColor = "#151515";
+        body.style.color = "whitesmoke";
+        localStorage.setItem("darkThemeOn", "true");
+      }
     }
   }
 
@@ -401,7 +461,7 @@ class App extends React.Component {
   }
 
   changeLanguage(e, name) {
-    if (e.currentTarget !== undefined) {
+    if (e !== undefined) {
       if (e.currentTarget.value === "pl") {
         this.setState({ lang: lang_pl, activeItem: lang_pl.menu.to_do });
         localStorage.setItem("lang", "pl");
@@ -432,7 +492,7 @@ class App extends React.Component {
       openPage = <Notes onClick={this.handleItemClick} lang={this.state.lang.notes} />;
     }
     else if (this.state.activeItem === this.state.lang.menu.preferences) {
-      openPage = <Preferences lang={this.state.lang.preferences} />;
+      openPage = <Preferences lang={this.state.lang.preferences} lang={this.state.lang.preferences} />;
     }
     else if (this.state.activeItem === this.state.lang.menu.contact) {
       openPage = <Contact openHelp={() => this.handleItemClick(this.state.lang.menu.help)} lang={this.state.lang.contact} />;

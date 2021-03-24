@@ -87,9 +87,9 @@ export default function UserList(props) {
 
     let empty = true;
     let showNoTerm = props.tasks.map((elem, index, array) => {
-        if (elem.date_of_execute === 0 && elem.list_id === props.listId) {
+        if (elem.date_of_execute === 0 && elem.list_id === props.listId && !elem.archive) {
             empty = false;
-            return <Task key={index} task={elem} lists={props.lists} lang={props.lang.task} />;
+            return <Task key={index} task={elem} lists={props.lists} update={props.update} lang={props.lang.task} />;
         }
         else if (index === array.length - 1 && empty === true) return <div key="empty" className="text-center"><h4>{props.lang.no_tasks}</h4></div>;
         else return "";
@@ -138,14 +138,14 @@ export default function UserList(props) {
             </Grid>
 
             <Accordion>
-                <Accordion.Title active={activeIndexTerm === 0} index={0} onClick={() => { (activeIndexTerm === 0) ? setActiveTerm(-1) : setActiveTerm(0) }}>
+                <Accordion.Title style={{ color: "inherit" }} active={activeIndexTerm === 0} index={0} onClick={() => { (activeIndexTerm === 0) ? setActiveTerm(-1) : setActiveTerm(0) }}>
                     <Icon name='dropdown' /> {props.lang.with_term}
-                        </Accordion.Title>
+                </Accordion.Title>
                 <Accordion.Content active={activeIndexTerm === 0}>
                     <Accordion>{show}</Accordion>
                 </Accordion.Content>
 
-                <Accordion.Title active={activeIndexTerm === 1} index={1} onClick={() => { (activeIndexTerm === 1) ? setActiveTerm(-1) : setActiveTerm(1) }}>
+                <Accordion.Title style={{ color: "inherit" }} active={activeIndexTerm === 1} index={1} onClick={() => { (activeIndexTerm === 1) ? setActiveTerm(-1) : setActiveTerm(1) }}>
                     <Icon name='dropdown' /> {props.lang.without_term}
                 </Accordion.Title>
                 <Accordion.Content active={activeIndexTerm === 1}>

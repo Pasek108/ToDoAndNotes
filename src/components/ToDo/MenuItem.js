@@ -6,14 +6,32 @@ import deleteUserList from '../../services/To-Do/deleteUserList';
 export default function MenuItem(props) {
     const [isMouseOver, setMouseOverFlag] = useState(0);
     const [openWarning, setWarningOpen] = useState(false);
-    const activeMenuStyle = (props.active) ? { backgroundColor: "white", fontWeight: "bold", color: "black" } : {};
+
+    const darkThemeOn = localStorage.getItem("darkThemeOn") === "true";
+    let activeMenuStyle = {};
+    let underlineStyle = {};
+
+    if (props.active) {
+        if (darkThemeOn) {
+            activeMenuStyle = { backgroundColor: "#6b6b6b", fontWeight: "bold", color: "white" };
+            underlineStyle = { width: "100%", backgroundColor: "#ff6a00" };
+        }
+        else {
+            activeMenuStyle = { backgroundColor: "white", fontWeight: "bold", color: "black" };
+            underlineStyle = { width: "100%", backgroundColor: "#243ee0" };
+        }
+    }
+    else {
+        if (darkThemeOn) underlineStyle = { backgroundColor: "#ff6a00" };
+        else underlineStyle = { backgroundColor: "#243ee0" };
+    }
 
     const deleteIcon = (
         <Modal basic size='tiny'
             trigger={
                 <Icon name="delete" color="red"
                     style={{ float: "right", position: "static" }}
-                    onClick={(e) => e.stopPropagation()} /> 
+                    onClick={(e) => e.stopPropagation()} />
             }
             onClose={() => { setWarningOpen(false); setMouseOverFlag(false) }}
             onOpen={() => setWarningOpen(true)}
@@ -54,7 +72,7 @@ export default function MenuItem(props) {
             onMouseLeave={() => { if (props.icon === "circle") setMouseOverFlag(false) }}
         >
             <Icon name={props.icon} style={{ color: props.color }} /> {props.name}
-            <div className="to-do-category-animation-underline" style={(props.active) ? { width: "100%" } : {}} />
+            <div className="to-do-category-animation-underline" style={underlineStyle} />
             {(isMouseOver) ? deleteIcon : ""}
         </Item>
     );

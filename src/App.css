@@ -12,7 +12,7 @@ body {
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  background-color: #f1f1f1 !important;
+  background-color: #f1f1f1;
 }
 
 body::-webkit-scrollbar {
@@ -297,6 +297,10 @@ a:hover {
   color: black !important;
 }
 
+.ui.header {
+  color: inherit !important;
+}
+
 .textarea-edit-icon {
   background-color: #e0e0e0 !important;
   color: black !important;
@@ -458,9 +462,8 @@ input[type="datetime-local"]:hover, input[type="time"]:hover {
 }
 
 .to-do-category-animation-underline {
-  transition: .4s;
+  transition: width .4s;
   width: 0;
-  background-color: #243ee0;
   height: 2px;
   position: absolute;
   left: 0;
@@ -621,6 +624,7 @@ div[class="list"] {
 }
 
 .known-problems {
+  color: black;
   background-color: white;
   padding: .3rem .6rem;
   border: 1px solid #d3d3d3;
@@ -656,6 +660,14 @@ textarea.contact-textarea:focus::placeholder {
 
 .ui.toggle.checkbox .box:before, .ui.toggle.checkbox label:before {
   background: rgb(190, 190, 190) !important;
+}
+
+.ui.inverted.menu {
+  background: #223A5E !important
+}
+
+.ui.horizontal.divider {
+  color: inherit !important;
 }
 
 .footer {

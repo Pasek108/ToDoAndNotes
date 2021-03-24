@@ -168,7 +168,7 @@ export default class Task extends React.Component {
         }
 
         return (
-            <Segment style={{ position: "relative", paddingTop: "1.2rem" }}>
+            <Segment style={{ position: "relative", paddingTop: "1.2rem", color: "black" }}>
                 <Grid columns="2">
                     <Grid.Row>
                         <Grid.Column width="12">
@@ -212,7 +212,7 @@ export default class Task extends React.Component {
                                 );
                             })}
 
-                            <Modal size='small'
+                            <Modal size='small' style={{ color: "black" }}
                                 onClose={() => this.setState({ showAddSubTaskModal: false })}
                                 onOpen={() => this.setState({ showAddSubTaskModal: true })}
                                 open={this.state.showAddSubTaskModal}
@@ -250,7 +250,7 @@ export default class Task extends React.Component {
                                 }
                                 <div className="task-list"><Icon name="circle" style={{ color: list.color }} /> {list.name}</div>
 
-                                <Modal size='small'
+                                <Modal size='small' style={{ color: "black" }}
                                     onClose={() => this.setState({ showEditTaskModal: false }, this.componentDidMount)}
                                     onOpen={() => this.setState({ showEditTaskModal: true })}
                                     open={this.state.showEditTaskModal}

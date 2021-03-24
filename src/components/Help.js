@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
-import { Container, Grid, Menu, List, Card, Header } from 'semantic-ui-react';
+import { Container, Grid, Menu, List, Card, Header, Divider } from 'semantic-ui-react';
 
 function HelpMainPage(props) {
     return (
         <>
             <Header as="h3">Pomoc</Header>
+            <p>W tej części strony znajduje się opis jej funkcji oraz odpowiedzi na pytania.</p>
             <p>
-                W tej części strony znajduje się opis jej funkcji oraz szybkie odpowiedzi na pytania.
-                Jeśli czegoś nie wiesz zajrzyj w szybkie pytania w części która sprawia ci problemy. 
-                Jeśli nie znajdziesz tam odpowiedzi na swoje pytanie przeglądnij wszystko z nią związane z możesz je zadać <a href="#" onClick={props.openContact}>tutaj</a>
+                Jeśli nie znajdziesz odpowiedzi w szybkich pytaniach w części która sprawia ci
+                problemy, poszukaj w bardziej sczegółowym opisie.<br />
+                Jeśli nigdzie nie ma odpowiedzi na twoje pytanie, możesz do mnie napisać <a href="#" onClick={props.openContact}>tutaj</a>.
             </p>
+            <br />
+            <p>Linki do pytań:</p>
+            <ul>
+                <li><a href="#">Lista zadań</a></li>
+                <li><a href="#">Notatki</a></li>
+                <li><a href="#">Preferencje</a></li>
+                <li><a href="#">Kontakt</a></li>
+                <li><a href="#">Pytania ogólne</a></li>
+            </ul>
         </>
     );
 }
@@ -44,6 +54,9 @@ function TaskListHelp(props) {
                     </List>
                 } />
             </Card>
+            <Divider />
+            <Header as="h3">Ekran główny</Header>
+            <p>Ekran główny listy notatek składa się z </p>
         </>
     );
 }
@@ -83,12 +96,12 @@ function PreferencesHelp(props) {
                         <List.Item>
                             <a>Import/Eksport</a>
                             <List.List>
-                                <List.Item as='a'>Po co jest ta opcja?</List.Item>
                                 <List.Item as='a'>Import zadań i notatek</List.Item>
                                 <List.Item as='a'>Eksport zadań i notatek</List.Item>
                             </List.List>
                         </List.Item>
                         <List.Item as='a'>Pozostałe</List.Item>
+                        <List.Item as='a'>Zmiana języka</List.Item>
                         <List.Item as='a'>Szybkie pytania</List.Item>
                     </List>
                 } />
@@ -100,7 +113,7 @@ function PreferencesHelp(props) {
 function Questions(props) {
     return (
         <>
-            
+
         </>
     );
 }
@@ -131,7 +144,7 @@ export default function Help(props) {
 
     return (
         <Container>
-            <Grid columns={2} style={{ minHeight: "calc(100vh - 5.2rem)", paddingBottom: "1rem" }}>
+            <Grid columns={2} style={{ minHeight: "calc(100vh - 2.3rem)", paddingBottom: "1rem" }}>
                 <Grid.Row className="p-0">
                     <Grid.Column width={3} className="p-0">
                         <Menu fluid vertical tabular style={{ height: "100%", padding: "1rem 0" }}>

@@ -38,7 +38,7 @@ export default class ToDoCategories extends React.Component {
         let userMenuItemLength = userMenuItems.length;
 
         for (let i = 0; i < 4; i++) {
-            menu.push( 
+            menu.push(
                 <MenuItem key={menuItems[i].name}
                     active={this.state.active === i}
                     icon={menuItems[i].icon}
@@ -153,7 +153,7 @@ export default class ToDoCategories extends React.Component {
     }
 
     render() {
-        if(this.state.today !== this.props.lang.today) this.componentDidMount();
+        if (this.state.today !== this.props.lang.today) this.componentDidMount();
 
         if (this.state.userListsCount !== -1) {
             return (

@@ -123,7 +123,7 @@ export default function Overdue(props) {
 
         sortTasks(filteredTasks, taskDates);
 
-        if (filteredTasks.length === 0) {
+        if (task.archive) {
             accordions.pop();
             dates.pop();
         }
@@ -134,6 +134,7 @@ export default function Overdue(props) {
                 </Accordion.Content>
             );
         }
+
     }
 
     sortAccordionsByDate(dates, accordions, true);

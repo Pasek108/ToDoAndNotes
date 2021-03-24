@@ -66,7 +66,7 @@ export default class AddListsModal extends React.Component {
         }
 
         return (
-            <Modal onClose={this.props.onClose} onOpen={this.props.onOpen} open={this.props.open} size='small'>
+            <Modal onClose={this.props.onClose} onOpen={this.props.onOpen} open={this.props.open} size='small' style={{ color: "black" }}>
                 <Header icon>
                     {lang.add_new_lists} ({lang.available}: {8 - this.state.userListsCount})
                 </Header>

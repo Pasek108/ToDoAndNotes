@@ -169,7 +169,7 @@ export default class Notes extends React.Component {
 
     return (
       <Container>
-        <Grid columns={2} divided style={{ minHeight: "calc(100vh - 5.2rem)", paddingBottom: "1rem" }}>
+        <Grid columns={2} divided style={{ minHeight: "calc(100vh - 2.3rem)", paddingBottom: "1rem" }}>
           <Grid.Row className="p-0">
             <Grid.Column width={3} className="p-1">
               {this.state.categoriesList}
